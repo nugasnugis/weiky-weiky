@@ -8,14 +8,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Test Sprites authentication
+      - name: Install Sprites CLI
+        run: |
+          curl -fsSL https://sprites.dev/install.sh | bash
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: Authenticate Sprites
         env:
           SPRITES_TOKEN: ${{ secrets.SPRITES_TOKEN }}
         run: |
-          set -e
+          sprite auth setup --token "$SPRITES_TOKEN"
 
-          echo "Testing Sprites API authentication..."
-
-          curl -i \
-            -H "Authorization: Bearer $SPRITES_TOKEN" \
-            "https://api.sprites.dev/v1/sprites"
+      - name: Test Sprite access
+        run: |
+          sprite list
