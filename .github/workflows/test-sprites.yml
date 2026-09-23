@@ -1,0 +1,23 @@
+name: Test Sprites API
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check Sprite services
+        env:
+          SPRITES_TOKEN: ${{ secrets.SPRITES_TOKEN }}
+          SPRITE_NAME: ${{ secrets.SPRITE_NAME }}
+        run: |
+          set -e
+
+          echo "Checking Sprite: $SPRITE_NAME"
+
+          curl -fsS \
+            -H "Authorization: Bearer $SPRITES_TOKEN" \
+            "https://api.sprites.dev/v1/sprites/$SPRITE_NAME/services" \
+            | python3 -m json.tool
