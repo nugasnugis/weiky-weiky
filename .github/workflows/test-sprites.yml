@@ -8,17 +8,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Install Sprites CLI
-        run: |
-          curl -fsSL https://sprites.dev/install.sh | bash
-          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
-
-      - name: Authenticate Sprites
-        env:
-          SPRITES_TOKEN: ${{ secrets.SPRITES_TOKEN }}
-        run: |
-          sprite auth setup --token "$SPRITES_TOKEN"
-
-      - name: Test Sprite access
-        run: |
-          sprite list
+    - name: Check token format
+      env:
+        SPRITES_TOKEN: ${{ secrets.SPRITES_TOKEN }}
+       run: |
+         echo "Token length: ${#SPRITES_TOKEN}"
+         echo "Slash count: $(printf '%s' "$SPRITES_TOKEN" | tr -cd '/' | wc -c)"
+         echo "Starts with: $(printf '%s' "$SPRITES_TOKEN" | cut -c1-4)"
+         echo "Ends with: $(printf '%s' "$SPRITES_TOKEN" | tail -c 5 | tr -c '\n' '*')"
